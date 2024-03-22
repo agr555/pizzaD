@@ -1,0 +1,106 @@
+
+<section class="main">
+    <div class="container">
+      <div class="main-info">
+        <!--            <h1>Самая вкусная пицца в мире-->
+        <h1 class="double-title">Самая вкусная пицца в мире
+          <span>только в Pizza Cheff</span>
+        </h1>
+        <div class="main-advantages">
+          <div class="advantage">
+            <div class="advantage-image">
+              <img src="assets/images/hop.png" alt="Hop">
+            </div>
+            <div class="advantage-text">
+              <div class="advantage-title">Лучшее тесто</div>
+              <div class="advantage-description">
+                Мы создаем тесто только из
+                отборной итальянской муки
+                наивысшего качества
+              </div>
+            </div>
+          </div>
+          <div class="advantage">
+            <div class="advantage-image">
+              <img src="assets/images/seo-and-web.png" alt="Seo-and-web">
+            </div>
+            <div class="advantage-text">
+              <div class="advantage-title">гарантия качества</div>
+              <div class="advantage-description">
+                Наша пиццерия получила
+                множество наград и
+                признаний по всему миру
+              </div>
+            </div>
+          </div>
+
+          <div class="advantage">
+            <div class="advantage-image">
+              <img src="assets/images/kitchen-pack.png" alt="Kitchen-pack">
+            </div>
+            <div class="advantage-text">
+              <div class="advantage-title">лучшие повара</div>
+              <div class="advantage-description">
+                Пиццы готовят самые профессиональные
+                итальянские повара
+              </div>
+            </div>
+          </div>
+          <div class="advantage">
+            <div class="advantage-image">
+              <img src="assets/images/holidays.png" alt="Holidays">
+            </div>
+            <div class="advantage-text">
+              <div class="advantage-title">отборные рецепты</div>
+              <div class="advantage-description">
+                Мы используем рецепты
+                от мировых лидеров
+                в изготовлении пиццы
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="main-action">
+          <button class="btn" id="choose-pizza">Выбрать пиццу</button>
+<!--           <button class="btn"  (click)="scrollTo(productsElement)">Выбрать пиццу</button> -->
+
+<!--            переводит на страницу с продуктами-->
+            <button class="btn"  routerLink="/products">Выбрать пиццу</button>
+
+          <button class="btn"  (click)="test()">Выбрать пиццу</button>
+          <button class="btn"  (click)="testPopup(popup)">Тест popup</button>
+        </div>
+      </div>
+
+      <div class="main-image">
+        <img src="assets/images/pizza_big.png" alt="Big pizza">
+      </div>
+
+    </div>
+</section>
+
+<ng-template #popup let-modal1>
+<div class="" tabindex="-1" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal1.dismiss('Cross click')">!</button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</ng-template>
+
+
+<!--<app-popup-full data=""></app-popup-full>-->
+<app-popup-full [data]="'Main component FULL'"></app-popup-full>

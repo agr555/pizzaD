@@ -1,0 +1,70 @@
+
+.products {
+  padding: 80px 0 120px 0;
+}
+
+/*.products-title {
+  font-size: 35px;
+  font-family: MullerBold, sans-serif;
+  color: rgb(189, 152, 92);
+  text-align: center;
+}*/
+
+.product {
+  width: 282px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 3px 13.8px 1.2px rgba(152, 152, 152, 0.2);
+  text-align: center;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  margin-top: 24px;
+}
+
+.product-image {
+  height: 180px;
+  /*ВАЖНО они все разные, потому приблизит.меряем размер блока до текста
+  по направляющим примоугольником 195 и    потом еще отняли отступ 15 из
+  .product { padding: 15px 20px;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-image img{
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/*
+.product-title {
+  font-size: 18px;
+  font-family: MullerBold, sans-serif;
+  color: rgb(56, 36, 0);
+}
+*/
+
+
+.product-text {
+  font-size: 14px;
+  color: rgb(24, 26, 26);
+  line-height: 1.286;
+  height: 49px; /*тут нужна высота, тк теств всегда одного размера 3 строки!*/
+  margin: 14px 0 15px 0;
+}
+.product-action {
+  display: flex;
+  flex-direction: column;
+}
+.product-action .btn {
+  /*проверяем размер кнопки f12. Он не совпадает, потому выставляем вручную */
+  height: 50px;
+  width: 242px;
+  padding: 17px; /*т.к. они тут другие, переопределяем*/
+}
+.product-action .btn.btn-white {
+margin-top: 10px;
+}
+@media screen and (max-width: 1229px) {
+  .product{
+    margin: 12px;
+  }
+}

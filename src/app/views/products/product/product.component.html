@@ -1,0 +1,37 @@
+    <section class="products">
+        <div class="container">
+          <h2 class="products-title" id="products-title">Описание пиццы</h2>
+          <div class="product-item">
+
+
+        <ng-template [ngIf]="product.image">
+          <div class="product-image">
+            <!-- <img src="assets/images/product/{{product.image}}"> -->
+            <img src="{{product.image}}">
+          </div>
+        </ng-template>
+
+        <ng-template [ngIf]="!product.image">
+          <div class="product-image">
+            <img src="assets/images/pizzzzza.png">
+          </div>
+        </ng-template>
+
+        <custom-title [title]="product.title | uppercase"></custom-title>
+
+<!--        <div class="product-text">{{product.description }}</div>-->
+        <div class="product-text">{{product.description | wordUpper:['сыр','томат', 'сосис','бекон']}}</div>
+        <div class="product-action" #elem>
+
+          <!-- <button class="btn btn-add-to-cart" (click)="addProductToCart()">В корзину</button> -->
+          <button class="btn btn-add-to-cart" routerLink="/order"[queryParams]="{product: product.title}">В корзину</button>
+          <!-- <button class="btn btn-white" [routerLink]="['/products', product.id]">В корзину</button> -->
+
+        </div>
+        <!-- <div>{{cartProductService.count}}</div> -->
+        <!-- <div>{{cartProductService.getCommonCount()}}</div> -->
+      </div>
+
+
+      </div>
+      </section>

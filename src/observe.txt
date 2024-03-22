@@ -1,0 +1,224 @@
+было 2 способа
+   this.activatedRoute.queryParams.subscribe ((params) => {
+          if(params['product']){
+            this.formValues.productTitle = params['product'];
+          }
+        });  
+
+/*     const productParam = this.activatedRoute.snapshot.queryParamMap.get('product');
+    if (productParam) {
+      this.formValues.productTitle = productParam;
+    } */
+
+   this.activatedRoute.queryParams - observable -объект, на него подписываемся через subscribe 
+
+
+
+
+   import { Component, OnInit } from '@angular/core';
+import {CartService} from "../../../services/cart.service";
+import { Observable, observable } from 'rxjs';
+
+@Component({
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
+})
+
+export class MainComponent implements OnInit {
+
+private observable: Observable<string>
+private promise: Promise<string>
+
+  constructor(public cartService: CartService) {
+
+    //создание observable 
+    this.observable = new Observable(observer => {
+      setTimeout (() => {
+        observer.next(' Hello! ')
+      }, 2000);
+    });
+//создание промиса
+    this.promise = new Promise<string>( resolve => {
+      setTimeout (() => {
+        resolve(' Hello!!! ')
+      }, 2000);
+    });
+  }
+  ngOnInit(){ 
+
+    //здесь подписка  = использование observable (оно не разовое! а подписка на изм) 
+        this.observable.subscribe((param: string) =>{
+        console.log(param);
+    });
+
+
+    //здесь использование promise. Оно разовое. Отличие - промис выполнился и завершился, обсервер живет и продолжает отслеживать.Не создавать повторно!
+        this.promise.then((param: string) => {
+        console.log(param);
+    })
+ 
+
+  }
+
+}
+/*
+2 подписчика и промис
+
+import { Component, OnInit } from '@angular/core';
+import { CartService } from "../../../services/cart.service";
+import { Observable, observable } from 'rxjs';
+
+@Component({
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
+})
+
+export class MainComponent implements OnInit {
+
+  private observable: Observable<number>
+  private promise: Promise<string>
+
+  constructor(public cartService: CartService) {
+
+    //создание observable 
+    this.observable = new Observable(observer => {
+      let count = 0;
+      setInterval(() => {
+        // observer.next(' Hello from observable! ')
+        observer.next(count++)
+      }, 1000);
+
+      setTimeout(() => {
+        observer.error(' error observable only! ') // подписка завершена и больше не подписаны
+      }, 8000);
+    });
+
+    this.promise = new Promise<string>(resolve => {
+      setTimeout(() => {
+        resolve(' Hello, I am promise! ')
+      }, 2000);
+    });
+  }
+  ngOnInit() {
+    //здесь подписка
+    this.observable.subscribe((param: number) => {
+      console.log('subscriber1: ', param);
+    });
+    //здесь использование.Отличие - промис выполнился и завершился, обсервер живет
+    this.promise.then((param: string) => {
+      console.log(param);
+    })
+  }
+  test() {
+    this.observable.subscribe((param: number) => {
+      console.log('subscriber2: ', param);
+    });
+  }
+}
+
+*/
+
+------
+unsubscribe OnDestroy
++- export class OrderComponent implements OnInit, OnDestroy {
+    ...
+ + private subscription:  Subscription | null = null; 
+  ngOnInit() {
+    //здесь подписка
+ +-   this.subscription = this.observable.subscribe(
+      {
+        next: (param: number) => {
+          console.log('subscriber1: ', param);
+        },
+        error: (error: string) => {
+          console.log('ERROR!' + error);
+        }
+      }
+    );
+  }
+ + ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
+
+
+https://rxjs.dev/guide/operators#creation-operators-1
+HOT  observable = cсобытия после подписки
+COOL observable = все события, независимо от времени (момента) подписки
+
+Subject (это спец объект может как принимать, так и отдавать событие)
+В отличие от observable  мы можем самостоятельно генерировать новое событие для наблюдателей
+
+const subject = new Subject<number>();
+
+subject.subscribe({
+    next: (v) => console.log ('observeA: ${v}');
+});
+subject.subscribe({
+    next: (v) => console.log ('observeA: ${v}');
+});
+
+subject.next(1);
+subject.next(2);
+
+
+ ~~в примере с observable нажатие кнопки выбрать пиццу запускало новый поток.
+ ~~в примере с subject если нажать после окончания, ничего не происходит, тк событие уже произошло 
+ =============
+исп (ОБЩИЙ)сервис для смены вод/выход
+1. подкл в header public authService: AuthService // v src\app\component\common\header\header.component.ts
+constructor(public cartService: CartService, public authService: AuthService) { }
+2.   public isLogged = false; // v src\app\auth\auth.service.ts
+3. v src\app\component\common\header\header.component.html
+      <a href="#" (click)="login()" *ngIf="!authService.isLogged">Войти</a>
+      <img src="assets/images/commerce-and-shopping.png" alt="Cart">
+      <a href="#" (click)="logout()" *ngIf="authService.isLogged">Выйти</a>
+
+--
+использовать сервис в шаблоне не оч хорошо, тк код компонента дб связующим звеном между шаблоном и сервисом
+
+Исп subject  может помочь уведомлять любую часть приложения о событиях
+
+1. v src\app\auth\auth.service.ts
+
+  constructor() { }
+  private isLogged = false; //!!!private!!!
+  + public isLoggedSubject: Subject<boolean> = new Subject<boolean>();
+  // public isLogged = false;
+  
+  logIn() {
+    this.isLogged = true;
+ +  this.isLoggedSubject.next(this.isLogged);
+  }
+
+  logOut() {
+    this.isLogged = false;
+ +  this.isLoggedSubject.next(this.isLogged);
+  }
+
+  2. в src\app\component\common\header\header.component.ts
+  
+  loggedState: boolean = false;
+
+  constructor(public cartService: CartService, private authService: AuthService) { }
+
+  ngOnInit(): void {
+ +   this.authService.isLoggedSubject.subscribe( (isLoggedIn: boolean ) => {
+    //подписались на событие 
+ +   this.loggedState = isLoggedIn;
+ +   console.log('State has been changed: '+ isLoggedIn);
+    //other logic
+ +    })
+  }
+3. в шаблоне уже исп loggedState, т.е. в  src\app\component\common\header\header.component.html
+      <a href="#" (click)="login()" *ngIf="!loggedState">Войти</a>
+      <a href="#" (click)="logout()" *ngIf="loggedState">Выйти</a>
+
+
+И теперь  на  isLoggedSubject можно подписаться уже где угодно
+
+Возможный подход к именованию объектов типа Observable, помечая их $ в конце названия переменной
+stopWatchValue=0;
+stopWatchValue$!: Observable<number>;
